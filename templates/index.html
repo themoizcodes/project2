@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>calc.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="app">
+
+    <main class="calculator">
+      <div class="calc-header">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        <h1>calc<span class="accent">.</span></h1>
+      </div>
+
+      <form id="calc-form" method="POST" action="{{ url_for('calculate') }}">
+        <div class="display-wrap">
+          {% if error %}
+            <div class="error-msg">{{ error }}</div>
+          {% endif %}
+          <input
+            type="text"
+            id="expression"
+            name="expression"
+            class="display"
+            value="{{ last_expression }}"
+            placeholder="0"
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="keypad">
+          <button type="button" class="key fn" data-action="clear">C</button>
+          <button type="button" class="key fn" data-action="del">⌫</button>
+          <button type="button" class="key op" data-value="%">%</button>
+          <button type="button" class="key op" data-value="/">÷</button>
+
+          <button type="button" class="key num" data-value="7">7</button>
+          <button type="button" class="key num" data-value="8">8</button>
+          <button type="button" class="key num" data-value="9">9</button>
+          <button type="button" class="key op" data-value="*">×</button>
+
+          <button type="button" class="key num" data-value="4">4</button>
+          <button type="button" class="key num" data-value="5">5</button>
+          <button type="button" class="key num" data-value="6">6</button>
+          <button type="button" class="key op" data-value="-">−</button>
+
+          <button type="button" class="key num" data-value="1">1</button>
+          <button type="button" class="key num" data-value="2">2</button>
+          <button type="button" class="key num" data-value="3">3</button>
+          <button type="button" class="key op" data-value="+">+</button>
+
+          <button type="button" class="key num zero" data-value="0">0</button>
+          <button type="button" class="key num" data-value=".">.</button>
+          <button type="submit" class="key equals" id="equals">=</button>
+        </div>
+      </form>
+    </main>
+
+    <aside class="tape">
+      <div class="tape-header">
+        <h2>History tape</h2>
+        <form method="POST" action="{{ url_for('clear_history') }}">
+          <button type="submit" class="clear-tape">clear</button>
+        </form>
+      </div>
+
+      <div class="tape-scroll">
+        {% if history %}
+          {% for item in history %}
+            <div class="tape-entry">
+              <div class="tape-expr">{{ item.expression }}</div>
+              <div class="tape-result">= {{ item.result }}</div>
+              <div class="tape-time">{{ item.timestamp }}</div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="tape-empty">No calculations yet.<br>Start punching numbers.</p>
+        {% endif %}
+      </div>
+    </aside>
+
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
